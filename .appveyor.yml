@@ -1,0 +1,28 @@
+build: off
+version: '1.0.{build}'
+
+environment:
+  matrix:
+    - PYTHON_VERSION: 3.6
+      MINICONDA: C:\Miniconda36-x64
+      PYTHON_ARCH: "64"
+
+init:
+  - "ECHO %PYTHON_VERSION% %MINICONDA%"
+
+install:
+  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda install --yes cffi numpy pip pytest
+  - python -m pip install limix
+
+test_script:
+  - python -c "import limix; import sys; sys.exit(limix.test());"
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: true
+    on_build_status_changed: false
+
